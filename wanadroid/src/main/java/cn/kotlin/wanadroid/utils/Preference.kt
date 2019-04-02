@@ -1,5 +1,6 @@
 package cn.kotlin.wanadroid.utils
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import java.lang.IllegalArgumentException
@@ -23,11 +24,10 @@ class Preference<T>(private val name: String, private val default: T) : ReadWrit
 
     override fun getValue(thisRef: Any?, property: KProperty<*>): T = findPreference(name, default)
 
-    //存储Key 为name  值为value
-    override fun setValue(thisRef: Any?, property: KProperty<*>, value: T) = putPreference(name, default)
+    override fun setValue(thisRef: Any?, property: KProperty<*>, value: T) = putPreference(name, value)
 
-
-    //查找 对于name的数据
+    // 查找 对于 name 的数据
+    @Suppress("UNCHECKED_CAST")
     private fun <T> findPreference(name: String, default: T): T = with(preference) {
         val res: Any = when (default) {
             is Long -> getLong(name, default)
@@ -40,7 +40,9 @@ class Preference<T>(private val name: String, private val default: T) : ReadWrit
         res as T
     }
 
-    private fun putPreference(name: String, value: T) = with(preference.edit()) {
+    // 存储 key 为name  值为 value
+    @SuppressLint("CommitPrefEdits")
+    private fun <T> putPreference(name: String, value: T) = with(preference.edit()) {
         when (value) {
             is Long -> putLong(name, value)
             is String -> putString(name, value)

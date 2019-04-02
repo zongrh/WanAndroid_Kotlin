@@ -11,7 +11,6 @@ import cn.kotlin.wanadroid.utils.Constant
 import cn.kotlin.wanadroid.utils.Utils
 import cn.kotlin.wanadroid.view.AccountView
 import kotlinx.android.synthetic.main.activity_login.*
-import okhttp3.internal.Util
 
 class AccountActivity : AppCompatActivity(), AccountView {
     /**
@@ -43,13 +42,13 @@ class AccountActivity : AppCompatActivity(), AccountView {
 
     //  保存登录成功后个人信息数据
     private fun initAccount(result: LoginResponse) {
-        AccountBean.instant.username = result.data.username
-        AccountBean.instant.id = result.data.id
-        AccountBean.instant.type = result.data.type
-        AccountBean.instant.icon = result.data.icon!!//新引入运算符“!!”，通知编译器不做非空校验，运行时一旦发现实例为空就扔出异常；
-        AccountBean.instant.isLogin = true
-        AccountBean.instant.collectIds = result.data.collectIds
-        Utils.writeToCache(Constant.accountInfo, AccountBean.instant)
+        AccountBean.instance.username = result.data.username
+        AccountBean.instance.id = result.data.id
+        AccountBean.instance.type = result.data.type
+        AccountBean.instance.icon = result.data.icon!!//新引入运算符“!!”，通知编译器不做非空校验，运行时一旦发现实例为空就扔出异常；
+        AccountBean.instance.isLogin = true
+        AccountBean.instance.collectIds = result.data.collectIds
+        Utils.writeToCache(Constant.accountInfo, AccountBean.instance)
 
     }
 

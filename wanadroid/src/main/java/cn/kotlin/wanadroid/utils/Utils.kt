@@ -18,6 +18,7 @@ import java.io.*
  */
 
 object Utils {
+
     fun logE(msg: Any) {
         Log.e(AppName, msg.toString())
     }
@@ -30,6 +31,7 @@ object Utils {
         val density = context!!.resources.displayMetrics.density
         return (dp * density + .5f).toInt()
     }
+
 
     fun writeToCache(fileName: String, obj: Any) {
         var fos: FileOutputStream? = null
@@ -71,7 +73,5 @@ object Utils {
 
         }
         return `object`
-
     }
-
 }

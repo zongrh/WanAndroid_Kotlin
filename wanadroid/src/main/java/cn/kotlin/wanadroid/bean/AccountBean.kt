@@ -14,21 +14,23 @@ import java.io.Serializable
  * History:
  *
  */
-class AccountBean private constructor(var id: Int, var username: String,
-                                      var icon: String, var type: Int,
-                                      var collectIds: List<Int>?,
+//记录当前账号
+class AccountBean private constructor(var id: Int, var username: String,var icon: String,
+                                      var type: Int, var collectIds: List<Int>?,
                                       var isLogin: Boolean) : Serializable {
 
     companion object {
-        val instant: AccountBean by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
+        val instance: AccountBean by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
             if (Utils.restoreObject(Constant.accountInfo) != null) {
-                var account: AccountBean = Utils.restoreObject(Constant.accountInfo) as AccountBean
-                AccountBean(account.id, account.username, account.icon, account.type, account.collectIds, account.isLogin)
+                var account :AccountBean = Utils.restoreObject(Constant.accountInfo) as AccountBean
+                AccountBean(account.id, account.username, account.icon,
+                        account.type, account.collectIds, account.isLogin)
             } else {
                 AccountBean(0, "", "", 0, null, false)
             }
         }
     }
+
 
     fun clear() {
         Preference.clear()
@@ -38,7 +40,7 @@ class AccountBean private constructor(var id: Int, var username: String,
         type = 0
         collectIds = null
         isLogin = false
-        Utils.writeToCache(Constant.accountInfo, AccountBean.instant)
+        Utils.writeToCache(Constant.accountInfo,AccountBean.instance)
     }
 
     override fun toString(): String {
