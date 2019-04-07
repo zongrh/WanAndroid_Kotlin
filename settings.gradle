@@ -1,1 +1,1 @@
-include ':app', ':wanadroid'
+include ':app', ':wanandroid'
