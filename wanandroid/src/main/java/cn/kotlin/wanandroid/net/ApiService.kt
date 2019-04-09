@@ -49,18 +49,73 @@ interface ApiService {
      * @return Deferred<HomeListResponse>
      */
     @POST("/lg/uncollect_originId/{id}/json")
-    fun removeCollectArticle(
-            @Path("id") id: Int): Observable<HomeListBean>
+    fun removeCollectArticle(@Path("id") id: Int): Observable<HomeListBean>
+
+    /**
+     * 收藏站外文章
+     */
+    @POST("/lg/collect/add/json")
+    @FormUrlEncoded
+    fun addCollectOutsideArticle(
+            @Field("title") title: String,
+            @Field("author") author: String,
+            @Field("link") link: String): Observable<HomeListBean>
 
     /**
      * 注册
      */
-    @POST
+    @POST("/user/register")
     @FormUrlEncoded
     fun registerWanAndroid(
             @Field("username") username: String,
             @Field("password") password: String,
-            @Field("repassword") repassword: String
+            @Field("repassword") repassowrd: String
     ): Observable<LoginResponse>
 
+    /**
+     * 获取我的收藏列表
+     */
+    @GET("/lg/collect/list/{page}/json")
+    fun getCollectArticle(@Path("page") page: Int): Observable<HomeListBean>
+
+    /**
+     * 知识体系下的文章
+     * http://www.wanandroid.com/article/list/0/json?cid=168
+     * @param page page
+     * @param cid cid
+     */
+    @GET("/article/list/{page}/json")
+    fun getArticleList(
+            @Path("page") page: Int,
+            @Query("cid") cid: Int): Observable<HomeListBean>
+    /**
+     * 知识体系
+     * http://www.wanandroid.com/tree/json
+     */
+    @GET("/tree/json")
+    fun getTypeTreeList(): Observable<KnowledgeBean>
+    /**
+     * 搜索
+     * http://www.wanandroid.com/article/query/0/json
+     * @param page page
+     * @param k POST search key
+     */
+    @POST("/article/query/{page}/json")
+    @FormUrlEncoded
+    fun getSearchList(
+            @Path("page") page: Int,
+            @Field("k") k: String): Observable<HomeListBean>
+    /**
+     * 大家都在搜
+     * http://www.wanandroid.com/hotkey/json
+     */
+    @GET("/hotkey/json")
+    fun getHotKeyList(): Observable<HotBean>
+
+    /**
+     * 常用网站
+     * http://www.wanandroid.com/friend/json
+     */
+    @GET("/friend/json")
+    fun getFriendList(): Observable<HotBean>
 }

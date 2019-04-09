@@ -20,6 +20,8 @@ import cn.kotlin.wanandroid.bean.AccountBean
 import cn.kotlin.wanandroid.bean.BannerBean
 import cn.kotlin.wanandroid.bean.HomeListBean
 import cn.kotlin.wanandroid.presenter.HomePresenterImpl
+import cn.kotlin.wanandroid.ui.AccountActivity
+import cn.kotlin.wanandroid.ui.KnowledgeActivity
 import cn.kotlin.wanandroid.ui.WebContentActivity
 import cn.kotlin.wanandroid.utils.Constant
 import cn.kotlin.wanandroid.utils.Utils
@@ -39,7 +41,6 @@ import kotlinx.android.synthetic.main.fragement_home.*
 class HomeFragment : Fragment(), HomeView {
 
     private val AUTO_PLAY = 2
-
     private var currentPage = 0
     private val bannerHandler: Handler? = Handler {
         if (it.what == AUTO_PLAY) {
@@ -113,19 +114,35 @@ class HomeFragment : Fragment(), HomeView {
         homeAdapter.run {
             setOnItemClickListener { adapter, view, position ->
                 val datas = homeAdapter.data[position]
-//                var intent= Intent(context,WebContentActivity::class.java)
-//                todo 点击事件
+                var intent = Intent(context, WebContentActivity::class.java)
+                intent.putExtra(Constant.data, datas.title)
+                intent.putExtra(Constant.url, datas.link)
+                intent.putExtra(Constant.name, datas.author)
+                intent.putExtra(Constant.id, datas.id)
+                startActivity(intent)
+
             }
-//            todo 收藏、取消收藏
+
             setOnItemChildClickListener { adapter, view, position ->
                 when (view.id) {
                     R.id.home_item_collect -> {
                         if (AccountBean.instance.isLogin) {
                             val datas = homeAdapter.data[position]
+                            if (datas.collect) {
+                                homeFragmentPresenter.cancelCollect(datas.id, position)
+                            } else {
+                                homeFragmentPresenter.collect(datas.id,position)
+                            }
+                        } else {
+                            Utils.toast("请先登录")
+                            startActivity(Intent(activity, AccountActivity::class.java))
                         }
                     }
                     R.id.home_item_type -> {
-//                        todo 条目类型
+                        val datas = homeAdapter.data[position]
+                        var intent = Intent(activity, KnowledgeActivity::class.java)
+                        intent.putExtra(Constant.data, datas)
+                        startActivity(intent)
                     }
 
                 }
@@ -141,6 +158,7 @@ class HomeFragment : Fragment(), HomeView {
         override fun isViewFromObject(view: View, `object`: Any): Boolean {
             return view == `object`
         }
+
         override fun getCount(): Int {
             return Int.MAX_VALUE
         }
@@ -150,7 +168,6 @@ class HomeFragment : Fragment(), HomeView {
             Glide.with(context).load(data!![position % data!!.size].imagePath).centerCrop().into(imageView)
             container!!.addView(imageView)
             imageView.setOnClickListener {
-                Utils.toast(data!![position].title)
                 var intent = Intent(context, WebContentActivity::class.java)
                 intent.putExtra(Constant.data, data!![position % data!!.size].title)
                 intent.putExtra(Constant.url, data!![position % data!!.size].url)
@@ -180,9 +197,13 @@ class HomeFragment : Fragment(), HomeView {
     }
 
     override fun collectSuccess(result: HomeListBean, position: Int) {
+        homeAdapter.data[position].collect = true
+        homeAdapter.notifyDataSetChanged()
     }
 
     override fun cancelCollectSuccess(result: HomeListBean, position: Int) {
+        homeAdapter.data[position].collect = false
+        homeAdapter.notifyDataSetChanged()
     }
 
     fun refresh() {

@@ -1,4 +1,4 @@
-package cn.kotlin.wanandroid
+package cn.kotlin.wanandroid.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -11,8 +11,8 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import cn.kotlin.wanandroid.R
 import cn.kotlin.wanandroid.bean.AccountBean
-import cn.kotlin.wanandroid.ui.AccountActivity
 import cn.kotlin.wanandroid.ui.fragment.HomeFragment
 import cn.kotlin.wanandroid.ui.fragment.HotFragment
 import cn.kotlin.wanandroid.ui.fragment.KnowledgeFragment
@@ -125,10 +125,7 @@ class MainActivity : AppCompatActivity() {
                     R.id.nav_like -> {
                         if (AccountBean.instance.isLogin) {
                             //我的收藏
-//                            todo  2019-04-03 09:38:59  收藏页面
-//                            startActivity(Intent(this, CollectActivity::class.java))
-                            Utils.toast("收藏页面")
-
+                            startActivity(Intent(this, CollectActivity::class.java))
                         } else {
                             Utils.toast("请先登录")
                             startActivity(Intent(this, AccountActivity::class.java))
@@ -152,8 +149,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.search -> {
-//                todo 2019-04-03 09:38:31   搜索页面
-//                startActivity(Intent(this,SearchAct))
+                startActivity(Intent(this,SearchActivity::class.java))
                 Utils.toast("搜索页面")
             }
         }
